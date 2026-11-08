@@ -29,9 +29,11 @@
 *.log
 
 # Local declarations describe one specific program (and often a client), so they
-# stay on the machine that ran the scan. `scope.example.toml` is the template.
+# stay on the machine that ran the scan. `scope.example.toml` is the template and
+# ships with the package, so it has to be re-included explicitly.
 /scope.toml
 /scope.*.toml
+!/scope.example.toml
 
 # Never commit credentials, tokens or authorization letters.
 .env

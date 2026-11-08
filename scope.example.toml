@@ -1,0 +1,32 @@
+# Scope definition. Copy to `scope.toml` in the directory you scan from: the
+# binary picks it up automatically, and every network-touching stage refuses
+# hosts that are not listed here.
+#
+# `targets` implies subdomains: `example.com` also allows `*.example.com`.
+# Wildcards are supported: `*.staging.example.com`, `api-*.example.com`.
+# `exclude` is checked first and always wins.
+
+# In-scope roots. A bare domain, a wildcard, or an IP address.
+targets = [
+  "example.com",
+  # "api.example.com",
+  # "*.staging.example.com",
+]
+
+# Explicitly out of scope, even when a target above would cover it.
+exclude = [
+  # "admin.example.com",
+  # "billing.example.com",
+]
+
+# Free-form metadata, echoed into the report.
+platform = "hackerone"
+program = "example-program"
+notes = "Scope copied from the program brief on 2026-11-08."
+
+# Lab escape hatch: targets that resolve to loopback or RFC1918 addresses are
+# refused unless this is enabled. Never enable it for a live program.
+allow_private_ips = false
+
+# Optional per-scope request cap, overriding the global rate_limit.
+# max_rps = 10
