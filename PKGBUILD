@@ -23,8 +23,15 @@ optdepends=(
   'interactsh-client: out-of-band callbacks for blind SSRF (OAST)'
   'seclists: real wordlists for content discovery'
 )
+# makepkg's `lto` option appends `-flto` to CFLAGS, which makes the C code in
+# dependencies such as `ring` GCC LTO bitcode (`.gnu.lto_*` sections, empty
+# `.text`). The final link is driven by rust-lld, which cannot read GCC's
+# bitcode, so every C symbol in that archive goes undefined. Rust's own ThinLTO
+# from the release profile is unaffected by this option.
+options=(!lto)
+
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('7d13b0d041eb0b762c48f64a455a321152ea94c09b3f86a0536b2ceb11a4bd13')
 
 # The GitHub repository is `BountyTool` but the package is `bountytool`. GitHub
 # names tag archives after the repository, so the extracted directory never
