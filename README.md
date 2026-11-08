@@ -49,8 +49,8 @@ yay -S bountytool
 ### From source
 
 ```bash
-git clone https://github.com/saisakthi/bountytool
-cd bountytool
+git clone https://github.com/SaisakthiM/BountyTool
+cd BountyTool
 make            # release build -> target/release/bountytool
 sudo make install
 ```

@@ -4,7 +4,7 @@ pkgver=0.1.0
 pkgrel=1
 pkgdesc='End-to-end bug bounty reconnaissance, vulnerability triage and reporting suite'
 arch=('x86_64' 'aarch64')
-url='https://github.com/saisakthi/bountytool'
+url='https://github.com/SaisakthiM/BountyTool'
 license=('MIT')
 depends=('gcc-libs' 'glibc')
 makedepends=('cargo' 'rust')
@@ -26,19 +26,24 @@ optdepends=(
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
 sha256sums=('SKIP')
 
+# The GitHub repository is `BountyTool` but the package is `bountytool`. GitHub
+# names tag archives after the repository, so the extracted directory never
+# matches $pkgname-$pkgver on a case-sensitive filesystem: every function has to
+# cd into the real path.
+_repo=BountyTool
+
 # The engine degrades gracefully, but a scan without the core scanners is not
 # worth running. `bountytool doctor --install` installs them afterwards.
 # Optional scanners are listed in optdepends so pacman can pull them on request.
 
 prepare() {
-  cd "$pkgname-$pkgver"
-  export RUSTUP_TOOLCHAIN=stable
+  cd "$_repo-$pkgver"
+  # Populate the crate cache so the build below can run fully offline.
   cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
-  cd "$pkgname-$pkgver"
-  export RUSTUP_TOOLCHAIN=stable
+  cd "$_repo-$pkgver"
   export CARGO_TARGET_DIR=target
   make CARGO_FLAGS="--frozen"
 }
@@ -48,7 +53,7 @@ build() {
 # with `cargo test` by the packager rather than under fakeroot.
 
 package() {
-  cd "$pkgname-$pkgver"
+  cd "$_repo-$pkgver"
   make install CARGO_FLAGS="--frozen" DESTDIR="$pkgdir" PREFIX=/usr
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
