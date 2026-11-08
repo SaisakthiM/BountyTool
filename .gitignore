@@ -1,0 +1,46 @@
+# ---------------------------------------------------------------- Rust build
+/target/
+**/*.rs.bk
+*.pdb
+
+# `Cargo.lock` is committed on purpose: this is a binary, so builds should be
+# reproducible. `config/default.toml` and `wordlists/` are compiled in through
+# `include_str!`, so they are source, not data.
+
+# ------------------------------------------------------------ Arch packaging
+/pkg/
+/src/pkg/
+*.pkg.tar
+*.pkg.tar.*
+*.src.tar.*
+# Extracted source and leftovers from a `makepkg` run in this directory.
+/scratch/
+# Note: `.SRCINFO` is NOT ignored — the AUR needs it committed.
+
+# --------------------------------------------------- Artifacts of `make dist`
+/bountytool-*.tar.gz
+/bountytool-*/
+
+# ------------------------------------------------------------- Scan data
+# Sessions hold real target names, raw responses and findings.
+/sessions/
+*.log
+
+# Local declarations describe one specific program (and often a client), so they
+# stay on the machine that ran the scan. `scope.example.toml` is the template.
+/scope.toml
+/scope.*.toml
+
+# Never commit credentials, tokens or authorization letters.
+.env
+.env.*
+*.kdbx
+
+# ------------------------------------------------------------- Editor and OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

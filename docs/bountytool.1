@@ -1,0 +1,131 @@
+.TH BOUNTYTOOL 1 "2026-11-08" "bountytool 0.1.0" "User Commands"
+.SH NAME
+bountytool \- end-to-end bug bounty reconnaissance, triage and reporting
+.SH SYNOPSIS
+.B bountytool
+[\fITARGET\fR] [\fIOPTIONS\fR]
+.br
+.B bountytool
+\fBdoctor\fR [\fB\-\-install\fR] [\fB\-\-group\fR \fIGROUP\fR]
+.br
+.B bountytool
+\fBsessions\fR [\fB\-\-limit\fR \fIN\fR] [\fB\-\-json\fR]
+.br
+.B bountytool
+\fBconfig\fR [\fB\-\-init\fR] [\fB\-\-file\fR \fIFILE\fR]
+.SH DESCRIPTION
+.B bountytool
+runs an ordered pipeline over an authorised target: scope validation, passive
+subdomain enumeration, DNS resolution, HTTP probing, fingerprinting, optional
+port scanning, crawling, content and parameter discovery, template scanning,
+native vulnerability probes, triage, and a report.
+.PP
+Two frontends share one engine. Without \fB\-\-tui\fR the tool prints progress
+on stderr and a result summary on stdout, which suits scripting. With
+\fB\-\-tui\fR it takes over the terminal with a live dashboard.
+.PP
+Active scanning is refused unless \fB\-y\fR is passed and a scope is declared.
+Loopback and RFC1918 targets require \fBallow_private_ips = true\fR in the scope
+file.
+.SH OPTIONS
+.TP
+.B \-p, \-\-profile \fIPROFILE\fR
+Scan depth: \fBlight\fR, \fBstandard\fR (default) or \fBdeep\fR. Each profile is
+a superset of the previous one.
+.TP
+.B \-\-scope \fIFILE\fR
+Scope file. A \fIscope.toml\fR in the working directory is used automatically.
+.TP
+.B \-\-in\-scope \fIHOST\fR
+Add an in-scope host or domain. Repeatable.
+.TP
+.B \-y, \-\-i\-have\-authorization
+Confirm you are permitted to test the target. Required.
+.TP
+.B \-\-tui
+Run the scan in the full-screen TUI.
+.TP
+.B \-\-dry\-run
+Print the external commands the pipeline would run without running them.
+.TP
+.B \-\-only \fISTAGE\fR
+Run only the listed stages. Accepts a comma separated list.
+.TP
+.B \-\-skip \fISTAGE\fR
+Skip the listed stages.
+.TP
+.B \-f, \-\-format \fIFORMAT\fR
+Report formats: \fBmd\fR, \fBjson\fR, \fBhtml\fR. Defaults to all three.
+.TP
+.B \-\-resume \fIDIR\fR
+Continue a previous session, skipping stages that already completed.
+.TP
+.B \-\-open
+Open the HTML report when the scan finishes.
+.TP
+.B \-\-quiet
+Only print the final result.
+.TP
+.B \-v, \-\-verbose
+Include debug logs and raw scanner output.
+.SH STAGES
+scope, passive, dns, probe, fingerprint, ports, urls, content, params, nuclei,
+active, triage, report.
+.SH FILES
+.TP
+.I ~/.config/bountytool/config.toml
+User configuration, deep-merged over the compiled defaults.
+.TP
+.I ~/.local/share/bountytool/sessions/
+One directory per scan: \fIsession.json\fR manifest, \fIartifacts/\fR, \fIraw/\fR
+and the generated reports.
+.TP
+.I ./scope.toml
+Scope used when \fB\-\-scope\fR is not given.
+.SH ENVIRONMENT
+.TP
+.B BOUNTYTOOL_CONCURRENCY, BOUNTYTOOL_RATE_LIMIT, BOUNTYTOOL_PER_HOST_BUDGET
+Override the matching configuration keys.
+.TP
+.B BOUNTYTOOL_SECLISTS, BOUNTYTOOL_WORDLIST
+Wordlist locations.
+.TP
+.B BOUNTYTOOL_OUTPUT
+Session output root.
+.TP
+.B BOUNTYTOOL_OAST, BOUNTYTOOL_SQLMAP
+Enable out-of-band callbacks or sqlmap confirmation.
+.SH EXIT STATUS
+.TP
+.B 0
+Success.
+.TP
+.B 1
+Generic failure.
+.TP
+.B 2
+A required external tool is missing.
+.TP
+.B 3
+Scope or authorization refusal.
+.TP
+.B 4
+Configuration error.
+.TP
+.B 130
+Interrupted.
+.SH EXAMPLES
+.nf
+bountytool example.com \-y
+bountytool example.com \-y \-\-tui
+bountytool example.com \-y \-\-profile deep \-f html \-\-open
+bountytool example.com \-y \-\-only probe,nuclei,active,report
+bountytool doctor \-\-install \-\-group recommended
+.fi
+.SH SEE ALSO
+.BR nmap (1),
+.BR ffuf (1),
+.BR nuclei (1),
+.BR sqlmap (1)
+.SH AUTHOR
+Saisakthi. Licensed under the MIT licence.

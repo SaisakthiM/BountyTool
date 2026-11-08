@@ -1,0 +1,35 @@
+# Compiled-in defaults for BountyTool. User overrides live in
+# ~/.config/bountytool/config.toml and are deep-merged on top of this file.
+
+# Global request concurrency for the native probe engine.
+concurrency = 16
+# Requests per second against the whole target set.
+rate_limit = 10
+# Hard cap of requests sent to a single host during one scan.
+per_host_budget = 300
+# Per-request timeout for native probes and crawling.
+http_timeout_secs = 20
+# Ceiling for a single external tool invocation.
+tool_timeout_secs = 900
+# Ceiling for the whole scan.
+max_runtime_secs = 3600
+
+user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+
+# Template scanning
+nuclei_severity = "low,medium,high,critical"
+nuclei_rate_limit = 25
+
+# Crawling
+katana_depth = 2
+# Maximum parameters fed into the active probes (protects runtime and the target).
+probe_params_limit = 80
+# Maximum out-of-band (interactsh) derived payloads.
+oast = false
+# Verify native SQLi hits with sqlmap (deep profile only).
+sqlmap_verify = false
+
+# Wordlists: seclists is preferred, the binary embeds a mini fallback list.
+seclists_dir = "/usr/share/seclists"
+wordlist = ""
+output_dir = ""

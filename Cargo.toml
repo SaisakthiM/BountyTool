@@ -1,0 +1,61 @@
+[package]
+name = "bountytool"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "End-to-end bug bounty reconnaissance, vulnerability triage and reporting suite"
+license = "MIT"
+repository = "https://github.com/saisakthi/bountytool"
+keywords = ["bugbounty", "security", "recon", "scanner", "tui"]
+categories = ["command-line-utilities"]
+readme = "README.md"
+
+[[bin]]
+name = "bountytool"
+path = "src/main.rs"
+
+[lib]
+name = "bountytool"
+path = "src/lib.rs"
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde", "clock"] }
+clap = { version = "4.6", features = ["derive", "env"] }
+crossterm = { version = "0.29", features = ["event-stream"] }
+dirs = "7"
+futures = "0.3"
+indicatif = "0.18"
+ratatui = "0.30"
+regex = "1"
+reqwest = { version = "0.12", default-features = false, features = [
+    "json",
+    "rustls-tls",
+    "gzip",
+    "brotli",
+    "charset",
+    "http2",
+] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+shell-words = "1.1"
+thiserror = "2"
+tokio = { version = "1", features = [
+    "rt-multi-thread",
+    "macros",
+    "process",
+    "sync",
+    "time",
+    "fs",
+    "io-util",
+    "signal",
+    "net",
+] }
+tokio-util = "0.7"
+toml = "1"
+url = "2"
+
+[profile.release]
+lto = "thin"
+strip = true
+panic = "abort"
+codegen-units = 1
